@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Política de seguridad: la página solo ejecuta su propio código y no habla con ningún servidor externo.
+     "trusted-types datos-estructurados" permite una sola excepción: escribir los datos para Google desde datos.js. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; manifest-src 'none'; frame-src 'none'; worker-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; require-trusted-types-for 'script'; trusted-types datos-estructurados; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+<!-- Estas etiquetas las leen WhatsApp, Google y las redes ANTES de ejecutar cualquier programa,
+     así que hay que cambiarlas a mano al publicar el sitio real (ver README, sección "Al publicar"). -->
+<title>Casa Maqui, pastelería artesanal en Chillán</title>
+<meta name="description" content="Kuchen, tortas y dulces hechos cada mañana en Chillán. Arma tu caja y envía el pedido por WhatsApp.">
+<meta name="theme-color" content="#BEE3A6">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CL">
+<meta property="og:title" content="Casa Maqui, pastelería artesanal en Chillán">
+<meta property="og:description" content="Kuchen, tortas y dulces hechos cada mañana. Pide por WhatsApp.">
+<meta property="og:image" content="assets/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/estilo.css">
+<script src="assets/js/datos.js"></script>
+<script src="assets/js/arranque.js"></script>
+<script src="assets/js/main.js" defer></script>
+</head>
+<body>
+
+<!-- Íconos. Los de producto se pintan con los colores del negocio; los de interfaz usan el color del texto. -->
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <!-- Interfaz -->
+  <symbol id="i-mas" viewBox="0 0 24 24"><path class="u" d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-menos" viewBox="0 0 24 24"><path class="u" d="M5 12h14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path class="u" d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-externo" viewBox="0 0 24 24"><path class="u" d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path class="u" d="M5 6.5A2.5 2.5 0 0 1 7.5 4h9A2.5 2.5 0 0 1 19 6.5v7a2.5 2.5 0 0 1-2.5 2.5H11l-4.5 4v-4A2.5 2.5 0 0 1 5 13.5z"/><path class="u" d="M9 10h.01M12 10h.01M15 10h.01"/></symbol>
+  <symbol id="i-buscar" viewBox="0 0 24 24"><circle class="u" cx="11" cy="11" r="6.5"/><path class="u" d="m16 16 4.5 4.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path class="u" d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle class="u" cx="12" cy="10" r="2.3"/></symbol>
+
+  <!-- Productos (64 × 64). f1, f2 y f3 son los tres tonos; k es el contorno. -->
+  <symbol id="i-torta" viewBox="0 0 64 64">
+    <rect class="f3 k" x="5" y="51" width="54" height="8" rx="4"/>
+    <path class="f1 k" d="M10 51V39a3 3 0 0 1 3-3h38a3 3 0 0 1 3 3v12z"/>
+    <path class="f1 k" d="M18 36V26a3 3 0 0 1 3-3h22a3 3 0 0 1 3 3v10z"/>
+    <path class="f2 k" d="M18 29v-3a3 3 0 0 1 3-3h22a3 3 0 0 1 3 3v3c-2.5 0-2.5 5-5 5s-2.5-5-5-5-2.5 5-5 5-2.5-5-5-5-2.5 5-5 5-1.5-5-3-5z"/>
+    <circle class="f3 k" cx="19" cy="44" r="1.8"/><circle class="f3 k" cx="30" cy="46" r="1.8"/><circle class="f3 k" cx="43" cy="43.5" r="1.8"/><circle class="f3 k" cx="50" cy="47" r="1.8"/>
+    <circle class="f2 k" cx="32" cy="17.5" r="4.5"/>
+    <path class="n k" d="M32 13c0-3.5 2-5.5 5.5-6"/>
+  </symbol>
+  <symbol id="i-rebanada" viewBox="0 0 64 64">
+    <path class="f1 k" d="M32 56 6 22a32 32 0 0 1 52 0z"/>
+    <path class="f3 k" d="M6 22a32 32 0 0 1 52 0l-3 3.6a27 27 0 0 0-46 0z"/>
+    <circle class="f2 k" cx="23" cy="32" r="3.4"/><circle class="f2 k" cx="38" cy="30" r="3.4"/><circle class="f2 k" cx="31" cy="42" r="3.4"/>
+  </symbol>
+  <symbol id="i-cupcake" viewBox="0 0 64 64">
+    <path class="f3 k" d="M15 34h34l-4 21a3 3 0 0 1-3 2.5H22a3 3 0 0 1-3-2.5z"/>
+    <path class="n k" d="M25 38l1.6 16M32 38v16M39 38l-1.6 16"/>
+    <rect class="f1 k" x="11" y="25" width="42" height="11" rx="5.5"/>
+    <rect class="f1 k" x="16" y="16" width="32" height="11" rx="5.5"/>
+    <rect class="f1 k" x="22" y="8" width="20" height="10" rx="5"/>
+    <circle class="f2 k" cx="32" cy="7" r="3.8"/>
+    <circle class="f2" cx="20" cy="30.5" r="1.7"/><circle class="f2" cx="32" cy="31" r="1.7"/><circle class="f2" cx="44" cy="30.5" r="1.7"/>
+  </symbol>
+  <symbol id="i-galleta" viewBox="0 0 64 64">
+    <circle class="f1 k" cx="32" cy="32" r="24"/>
+    <ellipse class="f2 k" cx="23" cy="24" rx="4.2" ry="3.4" transform="rotate(-20 23 24)"/>
+    <ellipse class="f2 k" cx="41" cy="22" rx="3.6" ry="3" transform="rotate(25 41 22)"/>
+    <ellipse class="f2 k" cx="34" cy="35" rx="4.4" ry="3.5" transform="rotate(10 34 35)"/>
+    <ellipse class="f2 k" cx="21" cy="40" rx="3.4" ry="2.8" transform="rotate(30 21 40)"/>
+    <ellipse class="f2 k" cx="45" cy="40" rx="3.2" ry="2.8" transform="rotate(-25 45 40)"/>
+  </symbol>
+  <symbol id="i-pan" viewBox="0 0 64 64">
+    <path class="f1 k" d="M7 38c0-12 11-21 25-21s25 9 25 21v8a4 4 0 0 1-4 4H11a4 4 0 0 1-4-4z"/>
+    <path class="f3 k" d="M7 40v6a4 4 0 0 0 4 4h42a4 4 0 0 0 4-4v-6z"/>
+    <path class="n k" d="M20 27l5 9M31 24l5 10M42 27l4 8"/>
+  </symbol>
+  <symbol id="i-berlin" viewBox="0 0 64 64">
+    <circle class="f1 k" cx="32" cy="32" r="25"/>
+    <path class="f2 k" d="M32 12.5c4.5 0 6.2 2.6 10.2 3.2 4.6.7 8.5 3.6 9.3 8.3.6 3.8-1.5 6-.9 9.6.8 4.7-1.2 8.5-5.3 10.5-3.4 1.7-4.2 5.1-8 6.3-3.6 1.1-6.2-1.7-10-1.3-4.4.5-8.4-1.7-10.3-5.7-1.7-3.6-5-5.2-4.6-9.4.4-3.6 3.5-5.5 3.5-9.1 0-4.4 3.6-7.7 8.1-8.4 3.2-.5 5-3 8-3z"/>
+    <circle class="f3 k" cx="32" cy="32" r="7"/>
+    <path class="n k" d="M22 21l3 2M40 19l-2 3M46 33h-3M39 44l-2-3M21 40l3-1M31 16.5l1 3"/>
+  </symbol>
+  <symbol id="i-alfajor" viewBox="0 0 64 64">
+    <rect class="f1 k" x="11" y="14" width="42" height="12" rx="6"/>
+    <rect class="f2 k" x="7" y="24" width="50" height="17" rx="8.5"/>
+    <rect class="f1 k" x="11" y="39" width="42" height="12" rx="6"/>
+    <circle class="f3" cx="22" cy="19.5" r="1.7"/><circle class="f3" cx="32" cy="18.5" r="1.7"/><circle class="f3" cx="42" cy="19.5" r="1.7"/>
+    <circle class="f3" cx="14" cy="32.5" r="2"/><circle class="f3" cx="22" cy="36" r="2"/><circle class="f3" cx="32" cy="29" r="2"/><circle class="f3" cx="42" cy="36" r="2"/><circle class="f3" cx="50" cy="32.5" r="2"/>
+  </symbol>
+  <symbol id="i-taza" viewBox="0 0 64 64">
+    <path class="n k" d="M20 6c-3 4 3 6 0 11M30 4c-3 4 3 6 0 11"/>
+    <ellipse class="f3 k" cx="30" cy="55" rx="23" ry="4"/>
+    <path class="n k" d="M47 29h4a6.5 6.5 0 0 1 0 13h-5"/>
+    <path class="f1 k" d="M10 25h37v14a14 14 0 0 1-14 14h-9a14 14 0 0 1-14-14z"/>
+    <ellipse class="f2 k" cx="28.5" cy="25" rx="18.5" ry="3.4"/>
+  </symbol>
+  <symbol id="i-caja" viewBox="0 0 64 64">
+    <rect class="f3 k" x="7" y="19" width="50" height="12" rx="2.5"/>
+    <rect class="f1 k" x="10" y="31" width="44" height="26" rx="2.5"/>
+    <path class="n k" d="M32 19v38"/>
+    <path class="f2 k" d="M32 19c-8-9-14-3-8.5 1.5 3 2.4 8.5 1 8.5-1.5zM32 19c8-9 14-3 8.5 1.5-3 2.4-8.5 1-8.5-1.5z"/>
+  </symbol>
+  <symbol id="i-bolsa" viewBox="0 0 64 64">
+    <path class="n k" d="M22 27v-9a10 10 0 0 1 20 0v9"/>
+    <path class="f1 k" d="M11 24h42l3 32a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3z"/>
+    <circle class="f2 k" cx="32" cy="40" r="7"/>
+  </symbol>
+  <symbol id="i-tijera" viewBox="0 0 64 64">
+    <circle class="f2 k" cx="17" cy="48" r="8"/><circle class="f2 k" cx="47" cy="48" r="8"/>
+    <path class="f1 k" d="M20 42 44 7l5 3.5-23 35z"/>
+    <path class="f1 k" d="M44 42 20 7l-5 3.5 23 35z"/>
+    <circle class="f3 k" cx="32" cy="26" r="2.6"/>
+  </symbol>
+  <symbol id="i-llave" viewBox="0 0 64 64">
+    <g transform="rotate(-45 32 32)">
+      <rect class="f1 k" x="26" y="22" width="12" height="38" rx="6"/>
+      <circle class="f1 k" cx="32" cy="17" r="12.5"/>
+      <rect class="f3 k" x="28" y="2" width="8" height="13" rx="1.5"/>
+    </g>
+  </symbol>
+  <symbol id="i-martillo" viewBox="0 0 64 64">
+    <g transform="rotate(35 32 32)">
+      <rect class="f3 k" x="27.5" y="20" width="9" height="40" rx="3"/>
+      <rect class="f1 k" x="13" y="8" width="38" height="16" rx="3"/>
+      <path class="f2 k" d="M13 11H7l-2 5 2 5h6z"/>
+    </g>
+  </symbol>
+  <symbol id="i-engranaje" viewBox="0 0 64 64">
+    <rect class="f1 k" x="27" y="6" width="10" height="52" rx="3"/>
+    <rect class="f1 k" x="27" y="6" width="10" height="52" rx="3" transform="rotate(45 32 32)"/>
+    <rect class="f1 k" x="27" y="6" width="10" height="52" rx="3" transform="rotate(90 32 32)"/>
+    <rect class="f1 k" x="27" y="6" width="10" height="52" rx="3" transform="rotate(135 32 32)"/>
+    <circle class="f1 k" cx="32" cy="32" r="18"/>
+    <circle class="f3 k" cx="32" cy="32" r="7"/>
+  </symbol>
+  <symbol id="i-estrella" viewBox="0 0 64 64">
+    <path class="f2 k" d="m32 6 7.6 16.4 17.9 2.1-13.3 12.2 3.7 17.7L32 45.6 16.1 54.4l3.7-17.7L6.5 24.5l17.9-2.1z"/>
+    <circle class="f3 k" cx="32" cy="32" r="4"/>
+  </symbol>
+  <symbol id="i-etiqueta" viewBox="0 0 64 64">
+    <path class="f1 k" d="M10 8h21l26 26-21 21a2.5 2.5 0 0 1-3.5 0L10 29z"/>
+    <circle class="f3 k" cx="21" cy="19" r="3.5"/>
+    <path class="n k" d="M21 19C14 10 18 4 26 4"/>
+  </symbol>
+</svg>
+
+<a class="saltar" href="#principal">Saltar al contenido</a>
+
+<!-- Avisos para quien edita el sitio: solo aparecen al abrirlo en el computador, nunca en internet -->
+<aside class="avisos" id="avisos" hidden aria-label="Avisos para quien edita el sitio">
+  <p class="avisos__titulo">Avisos para ti, que editas el sitio (los visitantes no ven esto)</p>
+  <ul id="avisos-lista"></ul>
+</aside>
+
+<p class="franja-demo" id="franja-demo" hidden>Sitio de demostración, con datos inventados.</p>
+
+<!-- Pantalla de carga -->
+<div class="cargador" id="cargador" aria-hidden="true">
+  <div class="cargador__sello"><span data-campo="siglas"></span></div>
+  <p class="cargador__nombre" data-campo="nombre"></p>
+  <span class="cargador__barra"></span>
+</div>
+
+<header class="cabecera" id="cabecera">
+  <div class="cabecera__fila envoltura">
+    <a class="marca" href="#inicio" aria-label="Ir al inicio">
+      <span class="marca__sello" aria-hidden="true" data-campo="siglas"></span>
+      <span class="marca__texto">
+        <span class="marca__nombre" data-campo="nombre"></span>
+        <span class="marca__rubro" data-campo="rubro"></span>
+      </span>
+    </a>
+    <nav class="menu" id="menu" aria-label="Principal">
+      <a href="#catalogo">Catálogo</a>
+      <a href="#pedir">Cómo pedir</a>
+      <a href="#horarios">Horarios</a>
+      <a href="#ubicacion">Cómo llegar</a>
+      <a href="#preguntas">Preguntas</a>
+    </nav>
+    <a class="estado-mini" id="estado-mini" href="#horarios" data-abierto="false" aria-hidden="true" tabindex="-1">Revisando</a>
+    <button class="hamburguesa" id="hamburguesa" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir el menú">
+      <span></span><span></span>
+    </button>
+  </div>
+  <!-- Letrero de la puerta: cambia solo según el horario real -->
+  <a class="letrero" id="letrero" href="#horarios" data-abierto="false" role="status">
+    <span class="letrero__cuerdas" aria-hidden="true"></span>
+    <span class="letrero__placa">
+      <strong class="letrero__estado" id="letrero-estado">Revisando</strong>
+      <span class="letrero__detalle" id="letrero-detalle">el horario</span>
+    </span>
+  </a>
+</header>
+
+<main id="principal">
+
+  <!-- Portada -->
+  <section class="portada" id="inicio" aria-labelledby="titular">
+    <div class="envoltura portada__grilla">
+      <div class="portada__texto">
+        <h1 class="portada__titular" id="titular" data-campo="titular"></h1>
+        <p class="portada__bajada" data-campo="bajada"></p>
+        <div class="portada__acciones">
+          <a class="boton boton--acento" data-whatsapp="consulta" target="_blank" rel="noopener noreferrer" hidden>
+            <svg class="u-ico" aria-hidden="true"><use href="#i-chat"/></svg><span>Pedir por WhatsApp</span><span class="solo-lector">(se abre en otra pestaña)</span>
+          </a>
+          <a class="boton boton--contorno" href="#catalogo">Ver el catálogo</a>
+        </div>
+      </div>
+      <div class="portada__arte" id="portada-arte" aria-hidden="true">
+        <span class="disco disco--a"><svg class="ico"><use href="#i-torta"/></svg></span>
+        <span class="disco disco--b"><svg class="ico"><use href="#i-rebanada"/></svg></span>
+        <span class="disco disco--c"><svg class="ico"><use href="#i-cupcake"/></svg></span>
+      </div>
+    </div>
+    <ul class="envoltura puntos" id="puntos"></ul>
+  </section>
+
+  <!-- Catálogo -->
+  <section class="bloque catalogo" id="catalogo" aria-labelledby="t-catalogo">
+    <div class="envoltura">
+      <div class="catalogo__cabeza">
+        <h2 class="titulo" id="t-catalogo">Catálogo</h2>
+        <p class="catalogo__nota" data-campo="notaCatalogo"></p>
+      </div>
+      <div class="herramientas" id="herramientas">
+        <div class="filtros" id="filtros" role="group" aria-label="Filtrar por categoría"></div>
+        <label class="buscador" id="buscador" hidden>
+          <span class="solo-lector">Buscar en el catálogo</span>
+          <svg class="u-ico" aria-hidden="true"><use href="#i-buscar"/></svg>
+          <input id="buscar" type="search" placeholder="Buscar un producto" maxlength="40" autocomplete="off" spellcheck="false">
+        </label>
+      </div>
+      <p class="solo-lector" id="conteo" role="status"></p>
+      <div id="lista"></div>
+      <div class="vacio" id="vacio" hidden>
+        <p>No encontramos productos con esa búsqueda. Prueba con otra palabra o pregúntanos por WhatsApp.</p>
+        <a class="boton boton--contorno" data-whatsapp="consulta" target="_blank" rel="noopener noreferrer" hidden>Preguntar por WhatsApp<span class="solo-lector"> (se abre en otra pestaña)</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo pedir -->
+  <section class="bloque pedir" id="pedir" aria-labelledby="t-pedir">
+    <div class="envoltura">
+      <h2 class="titulo" id="t-pedir">Cómo pedir</h2>
+      <ol class="pasos" id="pasos"></ol>
+    </div>
+  </section>
+
+  <!-- Horarios y ubicación -->
+  <section class="bloque donde" id="horarios" aria-labelledby="t-horarios">
+    <div class="envoltura donde__grilla">
+      <div class="horarios">
+        <h2 class="titulo" id="t-horarios">Horarios</h2>
+        <p class="horarios__estado" id="horarios-estado"></p>
+        <table class="tabla-horario">
+          <caption class="solo-lector">Horario de atención</caption>
+          <tbody id="tabla-horario"></tbody>
+        </table>
+        <p class="horarios__nota" data-campo="notaHorario"></p>
+      </div>
+      <div class="ubicacion" id="ubicacion" tabindex="-1">
+        <h2 class="titulo" id="t-ubicacion">Cómo llegar</h2>
+        <address class="ubicacion__direccion">
+          <span class="ubicacion__linea" data-campo="direccion"></span>
+          <span class="ubicacion__ref" data-campo="referencia"></span>
+        </address>
+        <svg class="mapa" viewBox="0 0 420 270" role="img" aria-label="Dibujo esquemático de la zona; usa los botones de abajo para abrir el mapa real">
+          <rect class="mp-fondo" width="420" height="270" rx="18"/>
+          <path class="mp-rio" d="M-10 214c70-34 120 20 190-8s110-62 250-34v114H-10z"/>
+          <rect class="mp-manzana" x="22" y="22" width="86" height="64" rx="10"/>
+          <rect class="mp-manzana" x="132" y="22" width="110" height="64" rx="10"/>
+          <rect class="mp-plaza" x="266" y="22" width="132" height="64" rx="10"/>
+          <circle class="mp-arbol" cx="300" cy="54" r="10"/><circle class="mp-arbol" cx="332" cy="46" r="8"/><circle class="mp-arbol" cx="360" cy="58" r="9"/>
+          <rect class="mp-manzana" x="22" y="112" width="86" height="64" rx="10"/>
+          <rect class="mp-manzana" x="132" y="112" width="52" height="64" rx="10"/>
+          <rect class="mp-manzana mp-local" x="208" y="112" width="34" height="64" rx="10"/>
+          <rect class="mp-manzana" x="266" y="112" width="132" height="42" rx="10"/>
+          <g class="mp-pin" transform="translate(225 108)">
+            <ellipse class="mp-sombra" cx="0" cy="40" rx="15" ry="4.5"/>
+            <path class="mp-gota" d="M0 40C-4 30-20 22-20 3a20 20 0 0 1 40 0c0 19-16 27-20 37z"/>
+            <circle class="mp-ojo" cx="0" cy="3" r="7"/>
+          </g>
+        </svg>
+        <div class="ubicacion__acciones">
+          <a class="boton boton--acento" id="mapa-google" target="_blank" rel="noopener noreferrer" hidden>Abrir en Google Maps<span class="solo-lector"> (se abre en otra pestaña)</span></a>
+          <a class="boton boton--contorno" id="mapa-waze" target="_blank" rel="noopener noreferrer" hidden>Abrir en Waze<span class="solo-lector"> (se abre en otra pestaña)</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preguntas -->
+  <section class="bloque preguntas" id="preguntas" aria-labelledby="t-preguntas">
+    <div class="envoltura preguntas__grilla">
+      <h2 class="titulo" id="t-preguntas">Preguntas frecuentes</h2>
+      <div class="preguntas__lista" id="preguntas-lista"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="pie" id="contacto">
+  <div class="envoltura">
+    <p class="pie__nombre" data-campo="nombre"></p>
+    <p class="pie__rubro"><span data-campo="rubro"></span>, <span data-campo="ciudad"></span></p>
+    <div class="pie__fila">
+      <a class="boton boton--acento boton--grande" data-whatsapp="consulta" target="_blank" rel="noopener noreferrer" hidden>
+        <svg class="u-ico" aria-hidden="true"><use href="#i-chat"/></svg><span>Escríbenos por WhatsApp</span><span class="solo-lector">(se abre en otra pestaña)</span>
+      </a>
+      <ul class="contactos" id="contactos"></ul>
+    </div>
+    <p class="pie__creditos" id="creditos"></p>
+  </div>
+</footer>
+
+<!-- Acceso rápido a WhatsApp y resumen de la caja -->
+<a class="flotante" id="flotante" data-whatsapp="consulta" target="_blank" rel="noopener noreferrer" aria-label="Escríbenos por WhatsApp (se abre en otra pestaña)" hidden>
+  <svg class="u-ico" aria-hidden="true"><use href="#i-chat"/></svg><span>WhatsApp</span><span class="solo-lector">(se abre en otra pestaña)</span>
+</a>
+<button class="barra-caja" id="barra-caja" type="button" hidden aria-haspopup="dialog">
+  <svg class="ico barra-caja__ico" aria-hidden="true"><use href="#i-caja"/></svg>
+  <span class="barra-caja__texto"><span class="barra-caja__cant" id="barra-cant"></span><span class="barra-caja__total" id="barra-total"></span></span>
+  <span class="barra-caja__accion">Ver mi caja</span>
+</button>
+
+<!-- Caja (el pedido) -->
+<dialog class="caja" id="caja" aria-labelledby="caja-titulo">
+  <div class="caja__marco">
+    <div class="caja__cabeza">
+      <h2 id="caja-titulo">Tu caja</h2>
+      <button class="caja__cerrar" id="caja-cerrar" type="button" aria-label="Cerrar la caja"><svg class="u-ico" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="caja__cuerpo">
+      <ul class="caja__lista" id="caja-lista"></ul>
+      <p class="caja__vacia" id="caja-vacia">Tu caja está vacía. Suma productos desde el catálogo.</p>
+      <div class="caja__datos" id="caja-datos">
+        <label class="campo"><span>Tu nombre</span><input id="c-nombre" type="text" maxlength="40" autocomplete="given-name"></label>
+        <label class="campo"><span>¿Para cuándo lo necesitas?</span><input id="c-cuando" type="text" maxlength="60" placeholder="Por ejemplo: sábado a las 15:00"></label>
+        <fieldset class="campo campo--opciones" id="c-entrega"><legend>Entrega</legend></fieldset>
+      </div>
+    </div>
+    <div class="caja__pie">
+      <p class="caja__total"><span>Total</span><strong id="caja-total"></strong></p>
+      <p class="caja__nota" id="caja-nota"></p>
+      <a class="boton boton--acento boton--grande" id="caja-enviar" target="_blank" rel="noopener noreferrer"><svg class="u-ico" aria-hidden="true"><use href="#i-chat"/></svg><span>Enviar pedido por WhatsApp</span><span class="solo-lector">(se abre en otra pestaña)</span></a>
+      <button class="enlace-btn" id="caja-vaciar" type="button">Vaciar la caja</button>
+    </div>
+  </div>
+</dialog>
+
+<noscript>
+  <p class="sin-js">Este sitio necesita JavaScript para mostrar el catálogo y el horario. Actívalo en tu navegador o escríbenos por WhatsApp.</p>
+</noscript>
+
+<!-- Moldes de los elementos que se repiten -->
+<template id="t-filtro"><button class="filtro" type="button" aria-pressed="false"></button></template>
+<template id="t-grupo">
+  <section class="grupo"><h3 class="grupo__titulo"></h3><ul class="carta"></ul></section>
+</template>
+<template id="t-producto">
+  <li class="plato">
+    <div class="plato__imagen"><svg class="ico" aria-hidden="true"><use href="#i-etiqueta"/></svg></div>
+    <div class="plato__cuerpo">
+      <div class="plato__linea">
+        <h4 class="plato__nombre"></h4>
+        <span class="plato__guia" aria-hidden="true"></span>
+        <p class="plato__precio"></p>
+      </div>
+      <p class="plato__desc"></p>
+      <p class="plato__etiqueta" hidden></p>
+    </div>
+    <div class="cantidad" data-vacio="true">
+      <button class="cantidad__menos" type="button"><svg class="u-ico" aria-hidden="true"><use href="#i-menos"/></svg></button>
+      <output class="cantidad__valor">0</output>
+      <button class="cantidad__mas" type="button"><svg class="u-ico" aria-hidden="true"><use href="#i-mas"/></svg></button>
+    </div>
+  </li>
+</template>
+<template id="t-linea">
+  <li class="linea">
+    <div class="linea__info"><p class="linea__nombre"></p><p class="linea__precio"></p></div>
+    <div class="cantidad" data-vacio="false">
+      <button class="cantidad__menos" type="button"><svg class="u-ico" aria-hidden="true"><use href="#i-menos"/></svg></button>
+      <output class="cantidad__valor">1</output>
+      <button class="cantidad__mas" type="button"><svg class="u-ico" aria-hidden="true"><use href="#i-mas"/></svg></button>
+    </div>
+  </li>
+</template>
+<template id="t-punto"><li class="punto"><strong class="punto__titulo"></strong><span class="punto__texto"></span></li></template>
+<template id="t-paso"><li class="paso"><h3 class="paso__titulo"></h3><p class="paso__texto"></p></li></template>
+<template id="t-dia"><tr><th scope="row"></th><td></td></tr></template>
+<template id="t-pregunta">
+  <details class="pregunta"><summary><span class="pregunta__texto"></span><span class="pregunta__signo" aria-hidden="true"></span></summary><p class="pregunta__respuesta"></p></details>
+</template>
+<template id="t-contacto"><li><a class="contacto"><span class="contacto__rotulo"></span><span class="contacto__valor"></span></a></li></template>
+<template id="t-opcion"><label class="opcion"><input type="radio" name="entrega"><span></span></label></template>
+
+</body>
+</html>
