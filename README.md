@@ -1,107 +1,102 @@
-# Sitio modelo para negocios locales
+# Generador de códigos QR
 
-Una página completa para un negocio de barrio: catálogo, pedido por WhatsApp, horario en vivo, cómo llegar y preguntas frecuentes. No usa servidor, base de datos ni herramientas de compilación. Todo el contenido sale de **un solo archivo** (`assets/js/datos.js`), así que cambiar de rubro es cambiar ese archivo.
+Un generador de códigos QR para enlaces, WhatsApp, WiFi, contactos, correos y teléfonos. Corre entero en el navegador: sin cuentas, sin anuncios, sin servidor y sin enviar nada a internet. Descarga el código en PNG o SVG, o imprime un cartel listo para pegar en el mostrador.
 
-La demostración está hecha para una pastelería inventada, «Casa Maqui». Sirve igual para una peluquería, un taller, una ferretería o cualquier negocio que venda productos o servicios con precio.
+**Verlo funcionando:** https://salvadorprogramador.github.io/generador-qr/
+
+El codificador QR está escrito desde cero en JavaScript (`assets/js/qr.js`, unas 400 líneas, sin librerías) y se comprobó contra una librería de referencia y un lector real. Más abajo está el detalle.
 
 | Escritorio | Celular |
 | --- | --- |
-| ![Portada en escritorio](docs/portada-escritorio.png) | ![Portada en celular](docs/portada-movil.png) |
-| ![Catálogo en escritorio](docs/catalogo-escritorio.png) | ![Caja de pedido en celular](docs/caja-movil.png) |
+| ![Portada en escritorio](docs/portada-escritorio.png) | ![Código en celular](docs/movil-codigo.png) |
+| ![WiFi en escritorio](docs/wifi-escritorio.png) | ![Cartel impreso](docs/cartel-impreso.png) |
 
-## Qué incluye
+## Qué hace
 
-- **Catálogo tipo carta** con filtros por categoría y buscador (el buscador ignora mayúsculas y tildes).
-- **Caja de pedido.** El cliente suma productos, y al enviar se abre WhatsApp con el pedido ya escrito: productos, total, nombre, fecha y tipo de entrega. La caja se recuerda si recarga la página.
-- **Letrero «Abierto / Cerrado»** que se calcula con el horario real y la zona horaria del negocio (no la del visitante). También marca el día de hoy en la tabla de horarios y dice cuándo vuelve a abrir.
-- **Cómo llegar** con botones a Google Maps y Waze.
-- **Colores y fotos propios.** El color del texto sobre cada fondo se elige solo, para que siempre se lea.
-- **Pantalla de carga corta** (se puede apagar) y animaciones que respetan «reducir movimiento».
-- Pensada para celular, tableta y escritorio, con navegación por teclado y lector de pantalla.
+- **Seis tipos de código:** enlace o texto, WhatsApp (con mensaje inicial), WiFi (WPA, WEP o abierta, red oculta), contacto (vCard), correo (con asunto y mensaje) y teléfono.
+- **Arregla los datos por ti.** Un celular chileno de 9 dígitos recibe el +56. Una dirección sin `https://` se completa. Los caracteres especiales de una clave WiFi se escapan como pide el formato.
+- **Descarga en PNG** (512, 1024, 2048 o 4096 px) **o en SVG** (vectorial, nítido a cualquier tamaño). El PNG sale con cuadritos de tamaño exacto, sin bordes borrosos.
+- **Cartel imprimible.** El botón «Imprimir cartel» deja en la hoja solo el título y el código, en blanco y negro con marco. Sirve también para guardarlo como PDF.
+- **Revisión antes de imprimir.** Avisa si el contraste es bajo, si los colores están invertidos, si el margen es corto y qué tan grande conviene imprimirlo según la cantidad de cuadritos.
+- **Colores, margen y nivel de corrección** a elección. El nivel va de baja (7 %) a máxima (30 %).
+- Pensado para celular, tableta y escritorio, con navegación por teclado, lector de pantalla y «reducir movimiento».
 
-## Verlo en tu computador
+## Usarlo en tu computador
 
 - **Lo más fácil:** doble clic en `index.html`.
-- **Con VS Code:** instala la extensión *Live Server*, clic derecho en `index.html` y *Open with Live Server*. Se actualiza solo cada vez que guardas.
+- **Con VS Code:** instala la extensión *Live Server*, clic derecho en `index.html` y *Open with Live Server*.
 
-## Cambiar de rubro
-
-Abre `assets/js/datos.js`. Tiene comentarios que explican cada línea.
-
-1. Cambia `nombre`, `rubro`, `ciudad`, `titular` y `bajada`.
-2. Cambia los `colores` (formato `#RRGGBB`).
-3. Cambia `categorias` y `productos`. Cada producto lleva `categoria`, `nombre`, `descripcion`, `precio` (solo números) y un `icono`.
-4. Cambia `whatsapp`, `direccion`, `horario` y las preguntas frecuentes.
-
-Ejemplo para una peluquería:
-
-```js
-nombre: "Peluquería Las Camelias",
-rubro: "Peluquería",
-colores: { fondo: "#FFF9F5", tinta: "#1F2A44", principal: "#F4C7B8", acento: "#E4572E", suave: "#CFE3F1" },
-portada: { iconos: ["tijera", "estrella", "bolsa"], foto: "" },
-categorias: [{ id: "corte", nombre: "Cortes" }, { id: "color", nombre: "Color" }],
-productos: [
-  { categoria: "corte", nombre: "Corte de mujer", descripcion: "Lavado, corte y secado.", precio: 18000, icono: "tijera" },
-  { categoria: "color", nombre: "Tintura completa", descripcion: "Según el largo del pelo.", precio: 35000, desde: true, icono: "estrella" }
-],
-```
-
-Si algo queda mal escrito (un color sin `#`, un precio con puntos, una hora que no existe), al abrir la página en tu computador aparece un **panel de avisos** arriba que dice qué corregir. Los visitantes nunca lo ven.
-
-**Íconos disponibles:** `torta`, `rebanada`, `cupcake`, `galleta`, `pan`, `berlin`, `alfajor`, `taza`, `caja`, `bolsa`, `tijera`, `llave`, `martillo`, `engranaje`, `estrella`, `etiqueta`.
-
-### Fotos
-
-Pon las fotos en `assets/img/` y escribe su ruta en `datos.js`, por ejemplo `foto: "assets/img/torta.webp"`. Sirve en la portada (cuadrada, unos 900 × 900 px) y en cada producto (cuadrada, desde 200 × 200 px). Mejor en formato `.webp` o `.jpg`, y livianas. La foto de la portada reemplaza a los tres íconos.
-
-## Al publicar el sitio real
-
-1. En `datos.js`, cambia `demo: true` por `demo: false`. Se quita la franja de demostración, se publican los datos para Google (horario, dirección, teléfono) y la página deja de estar marcada como «no indexar».
-2. En `index.html`, cambia a mano `<title>`, `description`, `og:title`, `og:description` y `og:image`. WhatsApp, Google y las redes leen esas etiquetas antes de ejecutar cualquier programa, por eso no pueden salir de `datos.js`. En `og:image` escribe la dirección completa, por ejemplo `https://tu-dominio.cl/assets/img/og.png`.
-3. Reemplaza `assets/img/og.png` (1200 × 630), `favicon.svg` y `apple-touch-icon.png` (180 × 180) por los del negocio.
-4. Cambia o borra `creditos`, y **revisa todos los textos de ejemplo**: plazos, medios de pago, alérgenos y preguntas frecuentes. Son inventados y no deben quedar en un negocio real.
-5. Si el sitio queda en una subcarpeta (`usuario.github.io/nombre-del-repo`), en `404.html` cambia `/assets` por `/nombre-del-repo/assets`.
+No hay que instalar ni compilar nada.
 
 ## Publicarlo gratis en GitHub Pages
 
-1. En GitHub, crea un repositorio nuevo y sube todo el contenido de esta carpeta (los archivos y la carpeta `assets`, no la carpeta que los contiene).
+1. En GitHub, crea un repositorio público llamado `generador-qr` y sube todo el contenido de esta carpeta (los archivos y las carpetas, no la carpeta que los contiene).
 2. Entra a **Settings → Pages**. En *Build and deployment* deja **Deploy from a branch**, elige la rama `main` y la carpeta `/ (root)`, y guarda.
-3. En uno o dos minutos queda en `https://TU-USUARIO.github.io/NOMBRE-DEL-REPO/`.
-4. Para usar el dominio del negocio, agrégalo en **Settings → Pages → Custom domain**.
+3. En uno o dos minutos queda en `https://TU-USUARIO.github.io/generador-qr/`.
 
-## Seguridad
+Si lo publicas con otro usuario o nombre de repositorio, cambia la dirección de `og:image` en `index.html` (es la imagen que aparece al compartir el enlace) y el enlace «Código en GitHub» del encabezado.
 
-- **Política de contenido estricta** (`Content-Security-Policy`) dentro de la página: solo se ejecuta código de esta misma carpeta, sin conexiones a servidores externos, y las ventanas incrustadas, formularios y objetos están desactivados.
-- **Trusted Types activado:** el navegador bloquea `innerHTML` y cualquier otra forma de meter código por el DOM. La única excepción es una política que escribe los datos para Google, y solo con texto que el propio sitio ya validó.
-- **Ningún texto de `datos.js` se interpreta como HTML.** Todo entra como texto. Los números de WhatsApp, colores, rutas de fotos, enlaces, horarios y precios se validan antes de usarse, y los enlaces se arman solo con partes ya revisadas.
-- **Sin cookies, sin rastreadores y sin terceros.** Las tipografías están en la misma carpeta. Los enlaces externos abren con `noopener noreferrer`.
-- **Todo en `datos.js` es público.** Cualquier visitante puede leer ese archivo, así que no pongas ahí contraseñas ni datos privados.
-- **Límite de GitHub Pages:** no deja configurar cabeceras HTTP, por eso la política va dentro de la página. Si el negocio necesita cabeceras completas (HSTS y otras), publica la misma carpeta en Netlify o Cloudflare Pages.
+## Privacidad y seguridad
+
+- **Lo que escribes no sale de tu navegador.** No hay servidor ni analítica, ni cookies, ni `localStorage`. Al cerrar la pestaña no queda nada guardado.
+- **Política de contenido estricta** (`Content-Security-Policy`) dentro de la página: solo se ejecuta código de esta misma carpeta, no se permite ninguna conexión a otros sitios y están desactivados los formularios, los objetos y las ventanas incrustadas.
+- **Trusted Types activado:** el navegador bloquea `innerHTML` y cualquier otra forma de meter código por el DOM. Todo lo que se muestra entra como texto. Una prueba escribe HTML y scripts en los campos y comprueba que no se ejecutan.
+- **Una clave WiFi dentro de un QR es legible por quien lo escanee.** El código la guarda tal cual para que el celular pueda conectarse. No lo imprimas en un lugar donde no quieras compartir la clave. En pantalla, la clave se enmascara en «Lo que lleva el código».
+- **Límite de GitHub Pages:** no deja configurar cabeceras HTTP, por eso la política va dentro de la página. Si necesitas cabeceras completas (HSTS y otras), publica la misma carpeta en Netlify o Cloudflare Pages.
+
+## Cómo se verificó
+
+Un generador de QR que no se puede leer no sirve, así que la comprobación fue lo central del proyecto:
+
+- **Contra una librería de referencia:** 1.120 códigos generados por `qr.js` (versiones 1 a 40, los cuatro niveles de corrección, los tres modos de texto, con el código lleno y a medias, y distintas máscaras) son **idénticos módulo por módulo** a los que produce [segno](https://pypi.org/project/segno/). Salvedad: segno agrega un byte de relleno que la norma no pide, y el script lo corrige antes de comparar.
+- **Con un lector real:** 228 códigos, de la versión 1 a la 40, incluidos textos con tildes, `ñ`, emoji y japonés, se leen con [ZXing-C++](https://github.com/zxing-cpp/zxing-cpp) y devuelven exactamente el texto original.
+- **Ejemplos clásicos:** «01234567» (versión 1-M, el ejemplo de la norma ISO/IEC 18004) y «HELLO WORLD» (versión 1-Q, el de los tutoriales de referencia) producen exactamente las mismas palabras de datos y de corrección que se publican para ellos.
+- **En un navegador real (Chromium):** 79 comprobaciones sobre cada tipo de código, validaciones, descargas, colores, teclado, accesibilidad, «sin JavaScript», entradas hostiles y que no se guarde nada. Los PNG y SVG que se descargan en esas pruebas se leen otra vez con ZXing, y el cartel impreso a PDF también.
+- **Lógica:** 17 pruebas con `node --test`.
+
+**Lo que no se probó:** cámaras de celulares reales. Los lectores de las cámaras son parecidos a ZXing, pero **prueba siempre tu código con tu celular antes de imprimir muchas copias**.
+
+### Repetir las pruebas
+
+```bash
+node --test                                    # lógica (no instala nada)
+
+pip install segno zxing-cpp pillow numpy       # comparación y lectura
+node pruebas/exportar-casos.js
+python3 pruebas/verificar-con-librerias.py
+
+npm i playwright && npx playwright install chromium     # navegador
+python3 -m http.server 8080                    # en otra terminal, desde esta carpeta
+node pruebas/navegador.js
+python3 pruebas/decodificar-descargas.py
+```
 
 ## Lo que no hace
 
-- **No cobra ni guarda pedidos.** El pedido termina en WhatsApp. Pagos en línea, inventario o cuentas de clientes necesitan un servidor y son otro tipo de proyecto.
-- **El mapa es un dibujo con botones al mapa real.** No incrusta mapas de terceros, para no cargar código ajeno.
-- **No hay panel de administración.** Precios y horarios se cambian en `datos.js`.
-- **Sin JavaScript no se ve el catálogo.** Los visitantes ven un aviso para que lo activen o escriban por WhatsApp.
+- **No es un QR dinámico.** No cuenta escaneos ni permite cambiar el destino después de impreso. Lo que codificas queda fijo, y por eso nunca vence ni depende de un servicio.
+- **No pone logos en el centro ni cambia la forma de los cuadritos.** Ambas cosas reducen la capacidad de lectura y aquí se prioriza que se lea.
+- **No genera muchos códigos de una vez** ni guarda un historial.
+- **Usa un solo modo de texto por código** (numérico, alfanumérico o bytes). Un texto mezclado puede salir una versión más grande de lo estrictamente necesario. No implementa Kanji, Micro QR ni «structured append».
+- **El texto con tildes y emoji va en UTF-8 sin marca ECI.** Lo leen los lectores modernos (cámaras de iPhone y Android, ZXing). Algunos lectores muy antiguos pueden mostrar caracteres raros.
 
 ## Estructura
 
 ```
-index.html            página (las etiquetas para redes y Google se editan a mano al publicar)
-404.html              página de error
-robots.txt  .nojekyll
+index.html            la página
 assets/
-  js/datos.js         ← lo único que se edita para cambiar de rubro
-  js/arranque.js      aplica los colores antes de mostrar la página
-  js/main.js          arma la página a partir de los datos
-  css/estilo.css      estilos
-  img/                ícono, imagen para compartir y fotos
-  fonts/              Unbounded e Instrument Sans (licencia OFL incluida)
+  js/qr.js            codificador QR (versiones 1 a 40, niveles L M Q H)
+  js/payload.js       arma el contenido de cada tipo (WhatsApp, WiFi, vCard…)
+  js/color.js         contraste entre colores (WCAG)
+  js/main.js          la interfaz
+  css/estilo.css      estilos, incluida la hoja de impresión
+  img/                ícono e imagen para compartir
+  fonts/              Big Shoulders Display y Hanken Grotesk (licencia OFL incluida)
 docs/                 capturas de este README
+pruebas/              pruebas de lógica, de comparación y de navegador
 ```
 
 ## Licencia
 
-MIT, a nombre de Alexander Carrillo (ver `LICENSE`). Los dibujos e íconos son propios. Las tipografías Unbounded e Instrument Sans tienen su propia licencia, SIL Open Font License 1.1, incluida en `assets/fonts`.
+MIT, a nombre de Alexander Carrillo (ver `LICENSE`). Las tipografías Big Shoulders Display y Hanken Grotesk tienen su propia licencia, SIL Open Font License 1.1, incluida en `assets/fonts`.
+
+«QR Code» es una marca registrada de DENSO WAVE INCORPORATED.
